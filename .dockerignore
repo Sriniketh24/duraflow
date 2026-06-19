@@ -1,0 +1,7 @@
+.git
+dashboard
+*.md
+.env*
+bin
+*.out
+.github

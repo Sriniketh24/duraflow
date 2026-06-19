@@ -1,0 +1,19 @@
+# Binaries
+/duraflow
+/bin/
+*.exe
+
+# Environment
+.env
+.env.local
+
+# Test outputs
+*.out
+coverage.out
+
+# System
+.DS_Store
+
+# Dashboard
+dashboard/node_modules
+dashboard/.next
