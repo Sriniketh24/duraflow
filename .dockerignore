@@ -1,7 +1,6 @@
 .git
-dashboard
-*.md
-.env*
-bin
-*.out
 .github
+*.out
+.env
+.env.local
+bin
