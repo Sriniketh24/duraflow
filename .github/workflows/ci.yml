@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: duraflow
+          POSTGRES_PASSWORD: duraflow
+          POSTGRES_DB: duraflow
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: Check formatting
+        run: test -z "$(gofmt -l .)"
+
+      - name: Run vet
+        run: go vet ./...
+
+      - name: Build
+        run: go build ./...
+
+      - name: Run tests
+        run: go test ./... -race -count=1
+        env:
+          DATABASE_URL: postgres://duraflow:duraflow@localhost:5432/duraflow?sslmode=disable
+
+  dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd dashboard && npm ci || npm install
+
+      - name: Build dashboard
+        run: cd dashboard && npm run build
