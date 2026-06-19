@@ -207,11 +207,21 @@ DATABASE_URL='postgres://duraflow:duraflow@localhost:55432/duraflow?sslmode=disa
 
 ## Live demo
 
-- **API:** `<RAILWAY_URL>` (try `GET /v1/stats`, `GET /healthz`)
-- **Dashboard:** `<VERCEL_URL>`
+- **API:** https://duraflow-api-production.up.railway.app — try
+  [`/v1/stats`](https://duraflow-api-production.up.railway.app/v1/stats),
+  [`/v1/workflows`](https://duraflow-api-production.up.railway.app/v1/workflows),
+  [`/healthz`](https://duraflow-api-production.up.railway.app/healthz)
+- **Dashboard:** https://duraflow-dashboard-production.up.railway.app
 
-Deployed on Railway (Go service + co-located PostgreSQL, private networking) and
-Vercel (dashboard). The Dockerfile is a multi-stage distroless build.
+Deployed on Railway: the Go service and PostgreSQL are co-located in one project
+with private networking, and the Next.js dashboard is a second service. The
+backend image is a multi-stage distroless build.
+
+```bash
+# start a workflow on the live API and watch it run
+curl -XPOST https://duraflow-api-production.up.railway.app/v1/workflows/order_processing/runs \
+  -H 'Content-Type: application/json' -d '{"input":{"order_id":"demo"}}'
+```
 
 ---
 
